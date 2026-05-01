@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://c63h0xy1v8wrt"]
+
+[ext_resource type="Script" uid="uid://c8514jfn0vifg" path="res://scripts/Player.gd" id="1_player_script"]
+[ext_resource type="Texture2D" uid="uid://ple61yefq3tb" path="res://assets/spritesheet_player.png" id="2_mdl7e"]
+[ext_resource type="Script" uid="uid://q2eu5ak5ipuu" path="res://scripts/Flashlight.gd" id="3_flashlight_script"]
+[ext_resource type="Texture2D" uid="uid://dt0bwfvaxxr10" path="res://assets/flashlight_cone.png" id="4_mdl7e"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
+radius = 8.0
+height = 24.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qu4a1"]
+atlas = ExtResource("2_mdl7e")
+region = Rect2(1407, 512, 469, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mdl7e"]
+atlas = ExtResource("2_mdl7e")
+region = Rect2(0, 1024, 469, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_70d11"]
+atlas = ExtResource("2_mdl7e")
+region = Rect2(469, 1024, 469, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cw2d6"]
+atlas = ExtResource("2_mdl7e")
+region = Rect2(2345, 1024, 469, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_khinc"]
+atlas = ExtResource("2_mdl7e")
+region = Rect2(1407, 1024, 469, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qu4a1")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mdl7e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_70d11")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cw2d6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_khinc")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[node name="Player" type="CharacterBody2D" unique_id=1981602003]
+script = ExtResource("1_player_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=890149751]
+shape = SubResource("CapsuleShape2D_1")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=403456761]
+scale = Vector2(0.05, 0.05)
+sprite_frames = SubResource("SpriteFrames_1")
+animation = &"walk"
+frame_progress = 0.6267692
+
+[node name="Flashlight" type="Node2D" parent="." unique_id=112358132]
+script = ExtResource("3_flashlight_script")
+
+[node name="PointLight2D" type="PointLight2D" parent="Flashlight" unique_id=314159265]
+color = Color(1, 0.95, 0.8, 1)
+energy = 1.2
+range_layer_min = -100
+range_layer_max = 100
+texture = ExtResource("4_mdl7e")
+texture_scale = 1.8
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=271828183]
+zoom = Vector2(4.0, 4.0)
+position_smoothing_enabled = true
+position_smoothing_speed = 5.0
