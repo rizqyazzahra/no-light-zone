@@ -24,13 +24,13 @@ func _show_win() -> void:
 	title_label.text   = "⚡ POWER RESTORED"
 	subtitle_label.text = "The city lights up.\nYou saved everyone."
 	title_label.add_theme_color_override("font_color", Color(0.9, 1.0, 0.4))
-	retry_btn.text = "▶ Play Again"
+	retry_btn.text = "Play Again"
 
 func _show_lose() -> void:
-	title_label.text    = "☠ CONSUMED BY DARKNESS"
+	title_label.text    = "CONSUMED BY DARKNESS"
 	subtitle_label.text = GameManager.lose_reason
 	title_label.add_theme_color_override("font_color", Color(1.0, 0.25, 0.15))
-	retry_btn.text = "↺ Try Again"
+	retry_btn.text = "Try Again"
 
 func _on_retry_pressed() -> void:
 	GameManager.restart()

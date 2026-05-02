@@ -1,45 +1,25 @@
 extends Node2D
 
-# ---------------------------------------------------------------------------
-# EXPORT — bisa diatur dari inspector
-# ---------------------------------------------------------------------------
-## Durasi baterai penuh dalam detik
 @export var battery_max: float = 120.0
-## Seberapa cepat baterai habis saat nyala
 @export var drain_rate: float = 1.0
-## Radius senter saat baterai penuh (pixels)
 @export var range_full: float = 1200.0
-## Radius senter saat baterai hampir habis
 @export var range_low: float = 400.0
-## Energi di bawah ini dianggap "low battery"
 @export var low_battery_threshold: float = 20.0
 
-# ---------------------------------------------------------------------------
-# STATE
-# ---------------------------------------------------------------------------
 var battery_current: float
 var is_on: bool = true
 
-# ---------------------------------------------------------------------------
-# REFERENCES
-# ---------------------------------------------------------------------------
 @onready var light: PointLight2D = $PointLight2D
 
-# Sinyal untuk HUD (nanti)
+# Sinyal untuk HUD
 signal battery_changed(pct: float)
 signal battery_empty()
 signal flashlight_toggled(on: bool)
 
-# ---------------------------------------------------------------------------
-# _ready
-# ---------------------------------------------------------------------------
 func _ready() -> void:
 	battery_current = battery_max
 	_apply_battery_to_light()
 
-# ---------------------------------------------------------------------------
-# _process
-# ---------------------------------------------------------------------------
 func _process(delta: float) -> void:
 	# Toggle senter dengan F
 	if Input.is_action_just_pressed("toggle_flashlight"):
@@ -61,19 +41,34 @@ func _process(delta: float) -> void:
 	else:
 		_apply_battery_to_light()
 
-	# Rotasikan senter ke arah kursor mouse
-	_rotate_to_mouse()
+	# Update arah senter
+	_update_flashlight_direction(delta)
 
-# ---------------------------------------------------------------------------
-# Logika Internal
-# ---------------------------------------------------------------------------
-func _rotate_to_mouse() -> void:
-	# Guard: viewport bisa null saat scene sedang di-unload
+var _mouse_aim_timer: float = 0.0
+var _last_mouse_pos: Vector2 = Vector2.ZERO
+
+func _update_flashlight_direction(delta: float) -> void:
 	if not is_inside_tree() or get_viewport() == null:
 		return
-	var mouse_pos: Vector2 = get_global_mouse_position()
-	var direction: Vector2 = mouse_pos - global_position
-	rotation = direction.angle()
+		
+	var current_mouse_pos = get_viewport().get_mouse_position()
+	
+	if current_mouse_pos.distance_squared_to(_last_mouse_pos) > 1.0:
+		_mouse_aim_timer = 1.5 # Aktifkan mode mouse selama 1.5 detik
+		_last_mouse_pos = current_mouse_pos
+	
+	if _mouse_aim_timer > 0.0:
+		_mouse_aim_timer -= delta
+		# Mode: Mengikuti Mouse
+		var direction: Vector2 = get_global_mouse_position() - global_position
+		var target_angle = direction.angle()
+		rotation = lerp_angle(rotation, target_angle, 25.0 * delta)
+	else:
+		# Mode: Mengikuti Arah Gerakan Karakter
+		var input_dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+		if input_dir != Vector2.ZERO:
+			var target_angle = input_dir.angle()
+			rotation = lerp_angle(rotation, target_angle, 10.0 * delta)
 
 func _toggle() -> void:
 	if battery_current <= 0.0:
@@ -111,11 +106,8 @@ func _apply_flicker(pct: float) -> void:
 	var flicker_intensity := (1.0 - pct * (battery_max / low_battery_threshold))
 	if randf() < flicker_intensity * 0.3:
 		light.enabled = !light.enabled
-	light.color = Color(1.0, 0.5, 0.1)  # Oranye saat kritis
+	light.color = Color(1.0, 0.5, 0.1)
 
-# ---------------------------------------------------------------------------
-# Public API
-# ---------------------------------------------------------------------------
 func get_battery_pct() -> float:
 	return battery_current / battery_max
 

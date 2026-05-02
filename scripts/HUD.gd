@@ -1,12 +1,10 @@
 extends CanvasLayer
 
-# ---------------------------------------------------------------------------
-# REFERENCES
-# ---------------------------------------------------------------------------
 @onready var battery_bar: ProgressBar       = %BatteryBar
 @onready var battery_label: Label           = %BatteryLabel
-@onready var flashlight_icon: Label         = %FlashlightIcon
-@onready var low_batt_warning: Label        = %LowBattWarning
+@onready var flashlight_label: Label        = %FlashlightLabel
+@onready var low_batt_warning: Control      = %LowBattWarning
+@onready var low_batt_label: Label          = %LowBattLabel
 @onready var anim_player: AnimationPlayer   = %AnimationPlayer
 @onready var cable_label: Label             = %CableLabel
 @onready var toolkit_label: Label           = %ToolkitLabel
@@ -14,29 +12,21 @@ extends CanvasLayer
 # State
 var _is_low: bool = false
 
-# ---------------------------------------------------------------------------
-# _ready
-# ---------------------------------------------------------------------------
 func _ready() -> void:
 	_update_battery_display(1.0)
 	low_batt_warning.visible = false
-	flashlight_icon.text = "🔦 ON"
-	flashlight_icon.modulate = Color(0.4, 1.0, 0.6)
+	flashlight_label.text = "ON"
+	flashlight_label.modulate = Color(0.4, 1.0, 0.6)
 	# Connect inventory
 	Inventory.inventory_changed.connect(_on_inventory_changed)
 	_on_inventory_changed(0, 0)
 
-# ---------------------------------------------------------------------------
 # Dipanggil oleh MainLevel setelah scene siap
-# ---------------------------------------------------------------------------
 func connect_to_flashlight(flashlight: Node) -> void:
 	flashlight.battery_changed.connect(_on_battery_changed)
 	flashlight.battery_empty.connect(_on_battery_empty)
 	flashlight.flashlight_toggled.connect(_on_flashlight_toggled)
 
-# ---------------------------------------------------------------------------
-# Signal Handlers
-# ---------------------------------------------------------------------------
 func _on_battery_changed(pct: float) -> void:
 	_update_battery_display(pct)
 
@@ -45,30 +35,28 @@ func _on_battery_changed(pct: float) -> void:
 	if pct < threshold and not _is_low:
 		_is_low = true
 		_show_low_battery_warning()
-	elif pct >= threshold and _is_low:
+	elif pct >= threshold and (_is_low or low_batt_warning.visible):
 		_is_low = false
-		low_batt_warning.visible = false
 		if anim_player.is_playing():
 			anim_player.stop()
+		low_batt_warning.visible = false
 
 func _on_battery_empty() -> void:
 	battery_label.text = "DEAD"
 	battery_bar.value = 0.0
 	battery_bar.modulate = Color(0.3, 0.3, 0.3)
-	low_batt_warning.text = "⚠ BATTERY DEAD"
+	low_batt_label.text = "BATTERY DEAD"
 	low_batt_warning.visible = true
 
 func _on_flashlight_toggled(on: bool) -> void:
 	if on:
-		flashlight_icon.text = "🔦 ON"
-		flashlight_icon.modulate = Color(0.4, 1.0, 0.6)
+		flashlight_label.text = "ON"
+		flashlight_label.modulate = Color(0.4, 1.0, 0.6)
 	else:
-		flashlight_icon.text = "🔦 OFF"
-		flashlight_icon.modulate = Color(0.6, 0.6, 0.6)
+		flashlight_label.text = "OFF"
+		flashlight_label.modulate = Color(0.6, 0.6, 0.6)
 
-# ---------------------------------------------------------------------------
 # UI Helpers
-# ---------------------------------------------------------------------------
 func _update_battery_display(pct: float) -> void:
 	battery_bar.value = pct * 100.0
 
@@ -85,11 +73,11 @@ func _update_battery_display(pct: float) -> void:
 		battery_bar.modulate = Color(1.0, 0.25, 0.1)
 
 func _show_low_battery_warning() -> void:
-	low_batt_warning.text = "⚠ LOW BATTERY"
+	low_batt_label.text = "LOW BATTERY"
 	low_batt_warning.visible = true
 	if anim_player.has_animation("blink_warning"):
 		anim_player.play("blink_warning")
 
 func _on_inventory_changed(cable: int, toolkit: int) -> void:
-	cable_label.text = "〰 %d / 5" % cable
-	toolkit_label.text = "🔧 %d / 2" % toolkit
+	cable_label.text = "%d / 5" % cable
+	toolkit_label.text = "%d / 2" % toolkit

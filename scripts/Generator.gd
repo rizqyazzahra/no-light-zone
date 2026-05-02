@@ -2,7 +2,7 @@ extends Area2D
 
 signal activated
 
-## Item yang dibutuhkan untuk mengaktifkan generator
+# Item yang dibutuhkan untuk mengaktifkan generator
 @export var required_cables: int  = 5
 @export var required_toolkits: int = 2
 
@@ -14,7 +14,6 @@ var _player_nearby: bool = false
 var _activated: bool = false
 
 func _ready() -> void:
-	# Connect Area2D signals secara code karena tidak di-setup lewat editor
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	interact_hint.visible = false

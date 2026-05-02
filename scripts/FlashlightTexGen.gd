@@ -1,17 +1,12 @@
 @tool
 extends EditorScript
 
-## Jalankan script ini SEKALI dari menu Tools > Execute Script di Godot Editor
-## untuk men-generate texture senter (flashlight cone gradient).
-## File akan tersimpan di res://assets/flashlight_cone.png
+## Jalankan script ini sekali untuk men-generate texture senter (flashlight cone gradient).
 
 func _run() -> void:
 	var size := 256
 	var img: Image = Image.create(size, size, false, Image.FORMAT_RGBA8)
 
-	# Apex (titik asal cahaya) = TENGAH gambar
-	# Godot merender PointLight2D dengan pusat texture = posisi light
-	# Cone membuka ke KANAN (arah +X), dirotasi oleh Flashlight node ke arah mouse
 	var apex := Vector2(size / 2.0, size / 2.0)
 
 	# Half-angle cone: 35 derajat

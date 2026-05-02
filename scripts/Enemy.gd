@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@export var speed: float = 80.0
+@export var speed: float = 60.0
 @export var catch_distance: float = 30.0
 
 @onready var catch_area: Area2D = $CatchArea
@@ -17,15 +17,27 @@ func _ready() -> void:
 	if catch_area:
 		catch_area.body_entered.connect(_on_catch_area_body_entered)
 		
-	# Jalankan animasi default jika ada
 	if animated_sprite.sprite_frames and animated_sprite.sprite_frames.has_animation("default"):
 		animated_sprite.play("default")
+		
+	# Setup suara monster
+	var sfx = AudioStreamPlayer2D.new()
+	sfx.stream = load("res://assets/Sound/monster.mp3")
+	sfx.max_distance = 600.0  # Jarak maksimal suara terdengar (pas dengan despawn)
+	sfx.attenuation = 2.0
+	sfx.finished.connect(func(): sfx.play())
+	add_child(sfx)
+	sfx.play()
 
 func _physics_process(_delta: float) -> void:
 	if not is_instance_valid(player):
 		return
 		
-	# Arahkan musuh langsung ke posisi player (karena tembus pandang/tembus tembok)
+	# Cek jika player sudah lari cukup jauh
+	if global_position.distance_to(player.global_position) > 600.0:
+		queue_free()
+		return
+		
 	var direction = global_position.direction_to(player.global_position)
 	velocity = direction * speed
 	
@@ -35,10 +47,8 @@ func _physics_process(_delta: float) -> void:
 	elif velocity.x > 0:
 		animated_sprite.flip_h = false
 		
-	# move_and_slide tanpa collision_mask akan membuatnya melayang menembus apa saja
 	move_and_slide()
 
 func _on_catch_area_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
-		# Player tertangkap!
 		GameManager.trigger_lose("Tertangkap oleh makhluk tak dikenal!\nJangan biarkan dia mendekat.")

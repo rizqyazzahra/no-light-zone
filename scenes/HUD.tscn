@@ -1,28 +1,37 @@
-[gd_scene format=3 uid="uid://hud_scene_001"]
+[gd_scene format=3 uid="uid://djvxly38s157s"]
 
-[ext_resource type="Script" path="res://scripts/HUD.gd" id="1_hud_script"]
+[ext_resource type="Script" uid="uid://b064g452hlvdo" path="res://scripts/HUD.gd" id="1_hud_script"]
+[ext_resource type="Texture2D" uid="uid://cnjnro7mrue4e" path="res://assets/Item/battery.png" id="2_battery"]
+[ext_resource type="Texture2D" uid="uid://clmug4taxjn67" path="res://assets/Item/wires.png" id="3_wires"]
+[ext_resource type="Texture2D" uid="uid://dvwhd22l1aycc" path="res://assets/Item/toolbox.png" id="4_toolbox"]
+[ext_resource type="Texture2D" uid="uid://db08b0y3n4tmm" path="res://assets/Item/alert.png" id="5_alert"]
+[ext_resource type="Texture2D" uid="uid://b0gxtfphs7rwh" path="res://assets/Item/flashlight.png" id="6_flashlight"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.05, 0.05, 0.1, 0.82)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.25, 0.25, 0.45, 0.7)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bar_bg"]
-bg_color = Color(0.1, 0.1, 0.15, 1.0)
+bg_color = Color(0.1, 0.1, 0.15, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bar_fill"]
-bg_color = Color(0.3, 1.0, 0.5, 1.0)
+bg_color = Color(0.3, 1, 0.5, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -35,114 +44,120 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("BatteryPanel/VBox/LowBattWarning:visible")
+tracks/0/path = NodePath("LowBattWarning:visible")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.0, 0.3),
-"transitions": PackedFloat32Array(1.0, 1.0),
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [true, false]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1"]
 _data = {
-"blink_warning": SubResource("Animation_blink")
+&"blink_warning": SubResource("Animation_blink")
 }
 
-; ============================================================
-; SCENE TREE: CanvasLayer → root control
-; ============================================================
-
-[node name="HUD" type="CanvasLayer"]
+[node name="HUD" type="CanvasLayer" unique_id=1547101374]
 layer = 10
 script = ExtResource("1_hud_script")
 
-[node name="HUDRoot" type="Control" parent="."]
+[node name="HUDRoot" type="Control" parent="." unique_id=1819917472]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 
-; ============================================================
-; BATTERY PANEL — bottom-left
-; ============================================================
-[node name="BatteryPanel" type="PanelContainer" parent="HUDRoot"]
+[node name="BatteryPanel" type="PanelContainer" parent="HUDRoot" unique_id=815469316]
 layout_mode = 1
-anchor_left = 0.0
+anchors_preset = 2
 anchor_top = 1.0
-anchor_right = 0.0
 anchor_bottom = 1.0
 offset_left = 16.0
-offset_top = -100.0
-offset_right = 220.0
+offset_top = -120.0
+offset_right = 240.0
 offset_bottom = -16.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="VBox" type="VBoxContainer" parent="HUDRoot/BatteryPanel"]
+[node name="VBox" type="VBoxContainer" parent="HUDRoot/BatteryPanel" unique_id=1209904066]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="TopRow" type="HBoxContainer" parent="HUDRoot/BatteryPanel/VBox"]
+[node name="TopRow" type="HBoxContainer" parent="HUDRoot/BatteryPanel/VBox" unique_id=745651943]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="BatteryTitle" type="Label" parent="HUDRoot/BatteryPanel/VBox/TopRow"]
+[node name="BatteryTitle" type="Label" parent="HUDRoot/BatteryPanel/VBox/TopRow" unique_id=1522995144]
 unique_name_in_owner = true
 layout_mode = 2
-text = "BATTERY"
-theme_override_font_sizes/font_size = 10
 theme_override_colors/font_color = Color(0.55, 0.55, 0.75, 1)
+theme_override_font_sizes/font_size = 10
+text = "BATTERY"
 
-[node name="Spacer" type="Control" parent="HUDRoot/BatteryPanel/VBox/TopRow"]
+[node name="Spacer" type="Control" parent="HUDRoot/BatteryPanel/VBox/TopRow" unique_id=534400006]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="BatteryLabel" type="Label" parent="HUDRoot/BatteryPanel/VBox/TopRow"]
-unique_name_in_owner = true
+[node name="BatteryIcon" type="TextureRect" parent="HUDRoot/BatteryPanel/VBox/TopRow" unique_id=1395403125]
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
-text = "100%"
-theme_override_font_sizes/font_size = 11
-theme_override_colors/font_color = Color(0.4, 1.0, 0.6, 1)
+texture = ExtResource("2_battery")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="BatteryBar" type="ProgressBar" parent="HUDRoot/BatteryPanel/VBox"]
+[node name="BatteryLabel" type="Label" parent="HUDRoot/BatteryPanel/VBox/TopRow" unique_id=357461332]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 1, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+text = "100%"
+
+[node name="BatteryBar" type="ProgressBar" parent="HUDRoot/BatteryPanel/VBox" unique_id=1830106657]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 14)
-max_value = 100.0
-value = 100.0
-show_percentage = false
+layout_mode = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_bar_bg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_bar_fill")
+value = 100.0
+show_percentage = false
 
-[node name="BottomRow" type="HBoxContainer" parent="HUDRoot/BatteryPanel/VBox"]
+[node name="BottomRow" type="HBoxContainer" parent="HUDRoot/BatteryPanel/VBox" unique_id=1818241842]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="FlashlightIcon" type="Label" parent="HUDRoot/BatteryPanel/VBox/BottomRow"]
+[node name="FlashlightTex" type="TextureRect" parent="HUDRoot/BatteryPanel/VBox/BottomRow"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = ExtResource("6_flashlight")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FlashlightLabel" type="Label" parent="HUDRoot/BatteryPanel/VBox/BottomRow" unique_id=979776585]
 unique_name_in_owner = true
 layout_mode = 2
-text = "🔦 ON"
+theme_override_colors/font_color = Color(0.4, 1, 0.6, 1)
 theme_override_font_sizes/font_size = 11
-theme_override_colors/font_color = Color(0.4, 1.0, 0.6, 1)
+text = "ON"
 
-[node name="Spacer2" type="Control" parent="HUDRoot/BatteryPanel/VBox/BottomRow"]
+[node name="Spacer2" type="Control" parent="HUDRoot/BatteryPanel/VBox/BottomRow" unique_id=943925003]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HintLabel" type="Label" parent="HUDRoot/BatteryPanel/VBox/BottomRow"]
+[node name="HintLabel" type="Label" parent="HUDRoot/BatteryPanel/VBox/BottomRow" unique_id=822970738]
 layout_mode = 2
-text = "[F] toggle"
-theme_override_font_sizes/font_size = 9
 theme_override_colors/font_color = Color(0.35, 0.35, 0.5, 1)
+theme_override_font_sizes/font_size = 9
+text = "[F] toggle"
 
-; ============================================================
-; LOW BATTERY WARNING — center screen
-; ============================================================
-[node name="LowBattWarning" type="Label" parent="HUDRoot"]
+[node name="LowBattWarning" type="HBoxContainer" parent="HUDRoot" unique_id=667874617]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
+anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.12
 anchor_right = 0.5
@@ -150,62 +165,88 @@ anchor_bottom = 0.12
 offset_left = -120.0
 offset_right = 120.0
 offset_bottom = 28.0
-text = "⚠ LOW BATTERY"
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(1.0, 0.3, 0.1, 1)
-visible = false
+alignment = 1
+theme_override_constants/separation = 8
 
-; ============================================================
-; ANIMATION PLAYER — untuk blink warning
-; ============================================================
-[node name="AnimationPlayer" type="AnimationPlayer" parent="HUDRoot"]
+[node name="AlertIcon" type="TextureRect" parent="HUDRoot/LowBattWarning"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("5_alert")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LowBattLabel" type="Label" parent="HUDRoot/LowBattWarning"]
 unique_name_in_owner = true
-libraries = {
-"": SubResource("AnimationLibrary_1")
-}
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.1, 1)
+theme_override_font_sizes/font_size = 14
+text = "LOW BATTERY"
 
-; ============================================================
-; INVENTORY PANEL — bottom-right
-; ============================================================
-[node name="InventoryPanel" type="PanelContainer" parent="HUDRoot"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="HUDRoot" unique_id=344942802]
+unique_name_in_owner = true
+libraries/ = SubResource("AnimationLibrary_1")
+
+[node name="InventoryPanel" type="PanelContainer" parent="HUDRoot" unique_id=2003911475]
 layout_mode = 1
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -150.0
-offset_top = -100.0
+offset_left = -170.0
+offset_top = -120.0
 offset_right = -16.0
 offset_bottom = -16.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="VBox" type="VBoxContainer" parent="HUDRoot/InventoryPanel"]
+[node name="VBox" type="VBoxContainer" parent="HUDRoot/InventoryPanel" unique_id=966145840]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="InvTitle" type="Label" parent="HUDRoot/InventoryPanel/VBox"]
+[node name="InvTitle" type="Label" parent="HUDRoot/InventoryPanel/VBox" unique_id=1498442133]
 layout_mode = 2
-text = "INVENTORY"
-theme_override_font_sizes/font_size = 10
 theme_override_colors/font_color = Color(0.55, 0.55, 0.75, 1)
+theme_override_font_sizes/font_size = 10
+text = "INVENTORY"
 
-[node name="CableLabel" type="Label" parent="HUDRoot/InventoryPanel/VBox"]
+[node name="CableRow" type="HBoxContainer" parent="HUDRoot/InventoryPanel/VBox" unique_id=1111913010]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CableIcon" type="TextureRect" parent="HUDRoot/InventoryPanel/VBox/CableRow" unique_id=981993900]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+texture = ExtResource("3_wires")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CableLabel" type="Label" parent="HUDRoot/InventoryPanel/VBox/CableRow" unique_id=1790259009]
 unique_name_in_owner = true
 layout_mode = 2
-text = "〰 0 / 5"
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
 theme_override_font_sizes/font_size = 13
-theme_override_colors/font_color = Color(1.0, 0.85, 0.3, 1)
+text = "0 / 5"
 
-[node name="ToolkitLabel" type="Label" parent="HUDRoot/InventoryPanel/VBox"]
+[node name="ToolkitRow" type="HBoxContainer" parent="HUDRoot/InventoryPanel/VBox" unique_id=705261340]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ToolkitIcon" type="TextureRect" parent="HUDRoot/InventoryPanel/VBox/ToolkitRow" unique_id=648370812]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+texture = ExtResource("4_toolbox")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ToolkitLabel" type="Label" parent="HUDRoot/InventoryPanel/VBox/ToolkitRow" unique_id=1178604860]
 unique_name_in_owner = true
 layout_mode = 2
-text = "🔧 0 / 2"
+theme_override_colors/font_color = Color(0.4, 0.7, 1, 1)
 theme_override_font_sizes/font_size = 13
-theme_override_colors/font_color = Color(0.4, 0.7, 1.0, 1)
+text = "0 / 2"
 
-[node name="InteractHint" type="Label" parent="HUDRoot/InventoryPanel/VBox"]
+[node name="InteractHint" type="Label" parent="HUDRoot/InventoryPanel/VBox" unique_id=475483464]
 layout_mode = 2
-text = "[E] collect"
-theme_override_font_sizes/font_size = 9
 theme_override_colors/font_color = Color(0.35, 0.35, 0.5, 1)
+theme_override_font_sizes/font_size = 9
+text = "[E] collect"
