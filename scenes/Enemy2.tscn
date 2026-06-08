@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://s3m4colajyy2"]
+
+[ext_resource type="Script" uid="uid://byvbbglh8g0ha" path="res://scripts/Enemy2.gd" id="1_0h3bv"]
+[ext_resource type="Texture2D" uid="uid://dksssblvbddw" path="res://assets/spritesheet_enemy.png" id="2_ss_sprite"]
+[ext_resource type="Texture2D" uid="uid://dt0bwfvaxxr10" path="res://assets/flashlight_cone.png" id="3_ss_light"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ss_body"]
+radius = 12.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ss_0"]
+atlas = ExtResource("2_ss_sprite")
+region = Rect2(0, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ss_1"]
+atlas = ExtResource("2_ss_sprite")
+region = Rect2(100, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ss_2"]
+atlas = ExtResource("2_ss_sprite")
+region = Rect2(200, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ss_3"]
+atlas = ExtResource("2_ss_sprite")
+region = Rect2(300, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ss_4"]
+atlas = ExtResource("2_ss_sprite")
+region = Rect2(400, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ss_5"]
+atlas = ExtResource("2_ss_sprite")
+region = Rect2(500, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ss_6"]
+atlas = ExtResource("2_ss_sprite")
+region = Rect2(600, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ss_7"]
+atlas = ExtResource("2_ss_sprite")
+region = Rect2(700, 100, 100, 100)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ss"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ss_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ss_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ss_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ss_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ss_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ss_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ss_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ss_7")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ss_catch"]
+radius = 16.0
+
+[node name="Enemy2" type="CharacterBody2D" unique_id=363474844]
+collision_layer = 4
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_0h3bv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ss_body")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1, 2)
+self_modulate = Color(0.12, 0.04, 0.12, 0.75)
+sprite_frames = SubResource("SpriteFrames_ss")
+
+[node name="EyeLightLeft" type="PointLight2D" parent="."]
+position = Vector2(-4.0, -8.0)
+color = Color(1.0, 0.08, 0.04, 1.0)
+energy = 5.0
+range_layer_min = -100
+range_layer_max = 100
+texture = ExtResource("3_ss_light")
+texture_scale = 0.15
+
+[node name="EyeLightRight" type="PointLight2D" parent="."]
+position = Vector2(4.0, -8.0)
+color = Color(1.0, 0.08, 0.04, 1.0)
+energy = 5.0
+range_layer_min = -100
+range_layer_max = 100
+texture = ExtResource("3_ss_light")
+texture_scale = 0.15
+
+[node name="CatchArea" type="Area2D" parent="."]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CatchArea"]
+shape = SubResource("CircleShape2D_ss_catch")
+debug_color = Color(0.8, 0, 0, 0.4)

@@ -10,6 +10,7 @@ var player: Node2D = null
 
 func _ready() -> void:
 	add_to_group("enemy")
+	add_to_group("regular_enemy")  # Grup untuk spawn loop independen
 	
 	# Cari player di dalam scene
 	player = get_tree().get_first_node_in_group("player")
