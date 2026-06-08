@@ -11,6 +11,7 @@ extends CanvasLayer
 
 # State
 var _is_low: bool = false
+var _low_batt_sfx: AudioStreamPlayer = null
 
 func _ready() -> void:
 	_update_battery_display(1.0)
@@ -40,6 +41,7 @@ func _on_battery_changed(pct: float) -> void:
 		if anim_player.is_playing():
 			anim_player.stop()
 		low_batt_warning.visible = false
+		_stop_low_batt_sfx()
 
 func _on_battery_empty() -> void:
 	battery_label.text = "DEAD"
@@ -47,6 +49,7 @@ func _on_battery_empty() -> void:
 	battery_bar.modulate = Color(0.3, 0.3, 0.3)
 	low_batt_label.text = "BATTERY DEAD"
 	low_batt_warning.visible = true
+	_stop_low_batt_sfx()
 
 func _on_flashlight_toggled(on: bool) -> void:
 	if on:
@@ -77,6 +80,20 @@ func _show_low_battery_warning() -> void:
 	low_batt_warning.visible = true
 	if anim_player.has_animation("blink_warning"):
 		anim_player.play("blink_warning")
+	# Mulai low battery sound looping
+	if not is_instance_valid(_low_batt_sfx):
+		_low_batt_sfx = AudioStreamPlayer.new()
+		_low_batt_sfx.stream = load("res://assets/Sound/low-battery.mp3")
+		_low_batt_sfx.volume_db = -3.0
+		_low_batt_sfx.finished.connect(func(): if is_instance_valid(_low_batt_sfx): _low_batt_sfx.play())
+		add_child(_low_batt_sfx)
+		_low_batt_sfx.play()
+
+func _stop_low_batt_sfx() -> void:
+	if is_instance_valid(_low_batt_sfx):
+		_low_batt_sfx.stop()
+		_low_batt_sfx.queue_free()
+		_low_batt_sfx = null
 
 func _on_inventory_changed(cable: int, toolkit: int) -> void:
 	cable_label.text = "%d / 5" % cable

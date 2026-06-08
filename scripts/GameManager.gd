@@ -23,11 +23,22 @@ func play_sfx(path: String) -> void:
 	sfx.play()
 	sfx.finished.connect(sfx.queue_free)
 
+func play_sfx_and_wait(path: String) -> void:
+	var sfx = AudioStreamPlayer.new()
+	sfx.stream = load(path)
+	add_child(sfx)
+	sfx.play()
+	await sfx.finished
+	sfx.queue_free()
+
 func trigger_win() -> void:
 	if state != GameState.PLAYING:
 		return
 	state = GameState.WIN
-	play_sfx("res://assets/Sound/you-have-reached-the-save-point.mp3")
+	# Stop BGM agar tidak menimpa win music di EndScreen
+	bgm_player.stop()
+	# Tunggu sampai voice line selesai sebelum tampilkan EndScreen
+	await play_sfx_and_wait("res://assets/Sound/you-have-reached-the-save-point.mp3")
 	get_tree().call_deferred("change_scene_to_file", "res://scenes/EndScreen.tscn")
 
 func trigger_lose(reason: String = "The battery died.\nDarkness consumed you.") -> void:
@@ -45,7 +56,13 @@ func start_game() -> void:
 
 func go_to_menu() -> void:
 	state = GameState.MENU
+	# Resume BGM jika sedang stop (misal setelah win)
+	if not bgm_player.playing:
+		bgm_player.play()
 	get_tree().call_deferred("change_scene_to_file", "res://scenes/MainMenu.tscn")
 
 func restart() -> void:
+	# Resume BGM jika sedang stop (misal setelah win)
+	if not bgm_player.playing:
+		bgm_player.play()
 	start_game()
